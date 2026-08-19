@@ -46,7 +46,7 @@ adf_test <- function(y, max_lags = 10, criterion = 'BIC') {
       }
       
       # Extrai estatísticas da tendência (tt) se a especificação for 'trend'
-      if (espec == "drift" && "(Intercept)" %in% rownames(teste@testreg[["coefficients"]])) {
+      if ("(Intercept)" %in% rownames(teste@testreg[["coefficients"]])) {
         coef_mat <- teste@testreg[["coefficients"]]
         intercept_coef   <- round(coef_mat["(Intercept)", "Estimate"], 4)
         intercept_stat   <- round(coef_mat["(Intercept)", "t value"], 4)
