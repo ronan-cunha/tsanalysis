@@ -36,9 +36,9 @@ adf_test <- function(y, max_lags = 10, criterion = 'BIC') {
       # Extrai estatísticas da tendência (tt) se a especificação for 'trend'
       if (espec == "trend" && "tt" %in% rownames(teste@testreg[["coefficients"]])) {
         coef_mat <- teste@testreg[["coefficients"]]
-        tt_coef   <- round(coef_mat["tt", "Estimate"], 4)
-        tt_stat   <- round(coef_mat["tt", "t value"], 4)
-        tt_pvalue <- round(coef_mat["tt", "Pr(>|t|)"], 4)
+        tt_coef   <- round(coef_mat["tt", "Estimate"], 6)
+        tt_stat   <- round(coef_mat["tt", "t value"], 6)
+        tt_pvalue <- round(coef_mat["tt", "Pr(>|t|)"], 6)
       } else {
         tt_coef   <- NA
         tt_stat   <- NA
@@ -63,10 +63,10 @@ adf_test <- function(y, max_lags = 10, criterion = 'BIC') {
         info_criterion     = crit,
         info_crit_val      = extract_crit_info(teste)[[crit]],
         selected_lags      = lags_usados,
-        test_stat          = round(est_stat, 4),
-        cv_1pct            = round(cv_1pct, 4),
-        cv_5pct            = round(cv_5pct, 4),
-        cv_10pct           = round(cv_10pct, 4),
+        test_stat          = round(est_stat, 6),
+        cv_1pct            = round(cv_1pct, 6),
+        cv_5pct            = round(cv_5pct, 6),
+        cv_10pct           = round(cv_10pct, 6),
         tt_coef            = tt_coef,
         tt_stat            = tt_stat,
         tt_pvalue          = tt_pvalue,
