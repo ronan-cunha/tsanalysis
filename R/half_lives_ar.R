@@ -1,4 +1,4 @@
-half_lives_ar <- function(ar_model,  eta = 0.05, verbose = FALSE){
+half_lives_ar <- function(ar_model,  eta = 0.05){
   k = length(ar_model$coef)
   
   # Vetor de estimativas pontuais (phi_hat) e Matriz de Covariância
@@ -6,7 +6,13 @@ half_lives_ar <- function(ar_model,  eta = 0.05, verbose = FALSE){
   V_phi   <- vcov(ar_model)[1:k, 1:k]
   
   # 3. Estimativa Pontual
-  hl_point <- calc_hl_longo_ar(phi_hat)
+  hl_point_lp <- calc_hl_longo_ar(phi_hat)
+  hl_point_cp <- calc_hl_curto_ar(phi_hat)
+  if(length(phi_hat)==1){
+    hl_point_raw = log(0.5)/log(abs(phi_hat))
+  } else {
+    hl_point_raw = NA
+    }
   
   # 4. Amostragem do Elipsoide de Confiança A (Nível 95%)
   cutoff_chi2 <- qchisq(1 - eta, df = k)
@@ -26,27 +32,32 @@ half_lives_ar <- function(ar_model,  eta = 0.05, verbose = FALSE){
   # Mapear os pontos para o elipsoide dos parâmetros phi em R^k
   phi_samples <- t(apply(points_scaled, 1, function(pt) phi_hat + L %*% pt))
   
+  # Short-run
   # 5. Avaliação da Meia-Vida em todo o Conjunto de Confiança A
-  hl_sims <- apply(phi_samples, 1, calc_hl_longo_ar)
-  hl_validos <- hl_sims[!is.na(hl_sims)]
+  hl_sims_cp <- apply(phi_samples, 2, calc_hl_curto_ar)
+  hl_validos_cp <- hl_sims_cp[!is.na(hl_sims_cp)]
   
   # Limites conservadores do intervalo [l1, l2] (Proposição 2)
-  l1_min <- min(hl_validos)
-  l2_max <- max(hl_validos)
+  l1_min_cp <- min(hl_validos_cp)
+  l2_max_cp <- max(hl_validos_cp)
   
-  if(verbose){
-    # 6. Exibição dos Resultados
-    cat("\n=========================================================\n")
-    cat("  RESULTADOS DO AR(", k, ")", " COM IC 95%\n", sep = "")
-    cat("=========================================================\n")
-    cat("Estimativa Pontual de Phi:                  ", round(phi_hat, 4), "\n")
-    cat("Meia-vida de Longo Prazo (Estimativa Pontual): ", hl_point, " meses\n", sep = "")
-    cat("Intervalo de Confiança a 95% [l1 - l2]:       [", l1_min, " - ", l2_max, "] meses\n", sep = "")
-  }
+  # Long run
+  # 5. Avaliação da Meia-Vida em todo o Conjunto de Confiança A
+  hl_sims_lp <- apply(phi_samples, 2, calc_hl_longo_ar)
+  hl_validos_lp <- hl_sims_lp[!is.na(hl_sims_lp)]
+  
+  # Limites conservadores do intervalo [l1, l2] (Proposição 2)
+  l1_min_lp <- min(hl_validos_lp)
+  l2_max_lp <- max(hl_validos_lp)
+  
   return(dfout <- data.frame('ar' = k,
                              'rho' = phi_hat[1],
-                             'meia_vida_ponto' = hl_point,
-                             'li' = l1_min,
-                             'ls' = l2_max))
+                             'meia_vida_ponto_raw' = hl_point_raw,
+                             'meia_vida_ponto_cp' = hl_point_cp,
+                             'li_cp' = l1_min_cp,
+                             'ls_cp' = l2_max_cp,
+                             'meia_vida_ponto_lp' = hl_point_lp,
+                             'li_lp' = l1_min_lp,
+                             'ls_lp' = l2_max_lp))
   
 }  
