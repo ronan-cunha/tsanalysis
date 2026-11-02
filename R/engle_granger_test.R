@@ -1,4 +1,4 @@
-engle_granger_test <- function(y, x, ic = c("AIC", "BIC"), max_lag = 12) {
+engle_granger_test <- function(y, x, ic = c("AIC", "BIC"), max_lag = 12, iis = TRUE) {
   ic <- match.arg(ic)
   
   # 1. Alinhamento dos dados e regressão de longo prazo (MQO)
@@ -9,16 +9,24 @@ engle_granger_test <- function(y, x, ic = c("AIC", "BIC"), max_lag = 12) {
     stop("Número insuficiente de observações para o teste de cointegração.")
   }
   
-  #fit_ols <- lm(y ~ x, data = df)
-  misat <- gets::isat(y, 
-                      mxreg = x,
-                      iis = TRUE,
-                      sis = TRUE,
-                      tif = FALSE,
-                      t.pval=0.001,
-                      print.searchinfo=FALSE)
+  if(iis){
+    misat <- gets::isat(y, 
+                        mxreg = x,
+                        iis = TRUE,
+                        sis = TRUE,
+                        tif = FALSE,
+                        t.pval=0.001,
+                        print.searchinfo=FALSE)
+    beta_x           = as.numeric(coef(misat)["mxreg"])
+    alpha_const      = as.numeric(coef(misat)["mconst"])
+  } else {
+    misat <- lm(y ~ x)
+    beta_x           = as.numeric(coef(misat)["x"])
+    alpha_const      = as.numeric(coef(misat)["(Intercept)"])
+  }
+  
   e_hat <- residuals(misat)
-  #e_hat_iis <- isat_outlier(e_hat)
+
   df_tst <- urca::ur.df(e_hat, 
                         type = 'none', 
                         lags = max_lag,
@@ -41,9 +49,7 @@ engle_granger_test <- function(y, x, ic = c("AIC", "BIC"), max_lag = 12) {
     cv_10pct         = cv_10pct,
     cointegrated_5pct = as.numeric(df_tst@teststat) < cv_5pct,
     n_obs            = T_obs,
-    beta_x           = as.numeric(coef(misat)["mxreg"]),
-    alpha_const      = as.numeric(coef(misat)["mconst"])
-    #beta_x           = as.numeric(coef(misat)["x"]),
-    #alpha_const      = as.numeric(coef(fit_ols)["(Intercept)"])
+    beta_x           = beta_x,
+    alpha_const      = alpha_const
   )
 }
