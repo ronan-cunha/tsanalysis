@@ -1,3 +1,9 @@
+#' Título da função dfgls_p_test
+#'
+#' @description Descrição da função dfgls_p_test.
+#'
+#' @export
+
 dfgls_p_test <- function(y, max_lags = 4, crit = 'AIC', type_test = "P-test") {
   
   if (!requireNamespace("urca", quietly = TRUE)) {

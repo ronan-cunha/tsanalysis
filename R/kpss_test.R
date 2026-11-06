@@ -1,3 +1,9 @@
+#' Título da função kpss_test
+#'
+#' @description Descrição da função kpss_test.
+#'
+#' @export
+
 kpss_test <- function(y, lags = "short") {
   
   if (!requireNamespace("urca", quietly = TRUE)) {

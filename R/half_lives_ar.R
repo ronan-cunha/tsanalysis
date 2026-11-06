@@ -1,3 +1,9 @@
+#' Título da função half_lives_ar
+#'
+#' @description Descrição da função half_lives_ar.
+#'
+#' @export
+
 half_lives_ar <- function(ar_model,  eta = 0.05){
   k = length(ar_model$coef)
   

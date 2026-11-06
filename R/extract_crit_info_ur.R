@@ -1,3 +1,9 @@
+#' Título da função extract_crit_info_ur
+#'
+#' @description Descrição da função extract_crit_info_ur.
+#'
+#' @export
+
 extract_crit_info_ur <- function(teste_ur) {
   # Extrai a regressão interna
   testreg <- if (inherits(teste_ur, "ur.ers") || 

@@ -1,3 +1,9 @@
+#' Título da função isat_outlier
+#'
+#' @description Descrição da função isat_outlier.
+#'
+#' @export
+
 isat_outlier<-function(y){
   
   misat <- gets::isat(y, 

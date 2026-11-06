@@ -1,3 +1,9 @@
+#' Título da função pp_test
+#'
+#' @description Descrição da função pp_test.
+#'
+#' @export
+
 pp_test <- function(y, lags = "short") {
   # Verifica se o pacote 'urca' está instalado
   if (!requireNamespace("urca", quietly = TRUE)) {

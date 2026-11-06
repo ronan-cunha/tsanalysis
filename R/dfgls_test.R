@@ -1,3 +1,9 @@
+#' Título da função dfgls_test
+#'
+#' @description Descrição da função dfgls_test.
+#'
+#' @export
+
 dfgls_test <- function(y, max_lags = 4, crit = 'AIC') {
 
   # DF-GLS possui especificações de constante ('mu') e tendência ('tau')

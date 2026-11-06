@@ -1,3 +1,9 @@
+#' Título da função engle_granger_test
+#'
+#' @description Descrição da função engle_granger_test.
+#'
+#' @export
+
 engle_granger_test <- function(y, x, ic = c("AIC", "BIC"), max_lag = 12, iis = TRUE) {
   ic <- match.arg(ic)
   

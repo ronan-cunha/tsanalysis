@@ -1,3 +1,9 @@
+#' Título da função calc_hl_curto_ar
+#'
+#' @description Descrição da função calc_hl_curto_ar.
+#'
+#' @export
+
 calc_hl_curto_ar <- function(phi_vec, max_l = 120, pi_val = 0.5) {
   k_dim <- length(phi_vec)
   
